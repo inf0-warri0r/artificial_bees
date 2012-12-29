@@ -1,4 +1,25 @@
-# -*- coding: utf-8 *-*
+"""
+Author : tharindra galahena (inf0_warri0r)
+Project: artificial bees simulation using neural networks
+Blog   : http://www.inf0warri0r.blogspot.com
+Date   : 29/12/2012
+License:
+
+     Copyright 2012 Tharindra Galahena
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version. This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+
+* You should have received a copy of the GNU General Public License along with
+This program. If not, see http://www.gnu.org/licenses/.
+
+"""
+
 import random
 
 
@@ -15,9 +36,7 @@ class population:
         self.avg_fitness = 0.0
         self.chromosoms = list()
         self.chromosoms_new = list()
-        self.thread_count = 0
         self.cut = 0.0
-        #self.lock = threading.Lock()
 
         for i in range(0, self.size):
             self.chromosoms.append(list())
@@ -62,7 +81,7 @@ class population:
 
         for i in range(0, self.gnum):
             if random.uniform(0, 100) < self.mutation_rate:
-                shift = random.uniform(-0.01, 0.01)
+                shift = random.uniform(-0.1, 0.1)
                 self.chromosoms_new[i1][i] = self.chromosoms_new[i1][i] + shift
 
     def cross_over(self, i1, i2, i):
@@ -93,12 +112,9 @@ class population:
             self.chromosoms[old][i] = self.chromosoms_new[new][i]
 
     def new_gen(self, fit):
-        i = 0
-        #count = 0;
+
         self.fitness = fit
         self.cal_b_fit(fit)
-        #self.cal_w_fit(fit)
-        #self.cal_avg_fit(fit)
 
         self.copy(0, 0)
         self.copy(1, 1)
@@ -108,11 +124,11 @@ class population:
         i1 = 0
         i2 = 1
 
-        for i in range(i, self.size):
+        for i in range(0, self.size):
             if max1 < fit[i]:
                 max1 = fit[i]
                 i1 = i
-        for i in range(i, self.size):
+        for i in range(0, self.size):
             if max1 > fit[i] and max2 < fit[i]:
                 max2 = fit[i]
                 i2 = i
@@ -127,21 +143,14 @@ class population:
         ind = 3 * self.size / 4
         self.cut = newfit[ind]
         i = 2
-        #t = list()
-        self.thread_count = 0
-        while i < self.size:
-            #thread.start_new_thread(self.operation, (fit, i))
-            self.operation(fit, i)
-            #t.append(th)
-            i += 2
 
-        while self.thread_count < (i - 2) / 2:
-            #print self.thread_count
-            pass
+        while i < self.size:
+            self.operation(fit, i)
+            i += 2
 
         for l in range(0, self.size):
             self.copy2(l, l)
-        """
+
         for l in range(0, self.size):
             for m in range(l + 1, self.size):
                 sm = 0
@@ -150,8 +159,8 @@ class population:
                         sm = sm + 1
                 if sm >= self.gnum:
                     for n in range(0, self.gnum):
-                        self.chromosoms[m][n] = random.uniform(sys.maxint)
-        """
+                        self.chromosoms[m][n] = random.uniform(-1.0, 1.0)
+
         return self.chromosoms
 
     def cal_b_fit(self, fit):
@@ -177,7 +186,6 @@ class population:
 
     def operation(self, fit, i):
 
-        #self.fitness = fit
         nfit = fit[:]
         i1 = self.choose(nfit, 0.0)
         i2 = i1
@@ -194,6 +202,3 @@ class population:
         self.cross_over(i1, i2, i)
         self.mutate(i)
         self.mutate(i + 1)
-        #self.lock.acquire()
-        self.thread_count = self.thread_count + 1
-        #self.lock.release()
