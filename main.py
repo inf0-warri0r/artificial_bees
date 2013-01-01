@@ -2,7 +2,7 @@
 Author : tharindra galahena (inf0_warri0r)
 Project: artificial bees simulation using neural networks
 Blog   : http://www.inf0warri0r.blogspot.com
-Date   : 29/12/2012
+Date   : 01/01/2013
 License:
 
      Copyright 2012 Tharindra Galahena
@@ -170,28 +170,25 @@ def fitness(b):
         d = d ** 0.5
         if d < 10.0 and d > -10.0:
             if f == 0:
-                flower[i] = (flower[i][0], flower[i][1], flower[i][1] + 1)
+                flower[i] = (flower[i][0], flower[i][1], flower[i][2] + 1)
                 bee[b] = (x + 10, y + 10, 1)
-                return 0.0
-            else:
                 return 0.0
 
     d = (x - hive[0]) ** 2.0
     d = d + (y - hive[1]) ** 2.0
     d = d ** 0.5
     if d < 40.0 and d > -40.0:
-            bee[b] = (x, y, 0)
-            if f == 1:
-                total = total + 1
-                return 100.0
-            else:
-                return 0.0
+        bee[b] = (x, y, 0)
+        if f == 1:
+            total = total + 1
+            return 100.0
+
     return 0.0
 
 for i in range(0, bee_count):
     l = split_list(chro[i])
+
     for j in range(0, 2):
-        #print "ssss ", len(l[j])
         bee_net[i][j].put_weights(l[j])
 
 gen_count = 0
@@ -211,7 +208,7 @@ while 1:
         timer = 0
         for i in range(0, bee_count):
             fit[i] = bee_net[i][0].get_fitness()
-        print fit[int(pop.cal_b_fit(fit))], " ", total
+        print "genaration : ", gen_count, " total collection : ", total
         chro = pop.new_gen(fit)
         for i in range(0, bee_count):
             l = split_list(chro[i])
@@ -223,7 +220,6 @@ while 1:
             bee[i] = ((random.uniform(0, 600), random.uniform(0, 600), 0))
         gen_count = gen_count + 1
         total = 0
-        print "---------------------------------------", gen_count
 
     timer = timer + 1
     copy()
@@ -236,13 +232,30 @@ while 1:
         bee_net[i][1].update_fitness(fi)
 
     for i in range(0, bee_count):
+        x = bee_old[i][0]
+        y = bee_old[i][1]
+        nx = bee[i][0]
+        ny = bee[i][1]
+
+        d = (nx - x) ** 2.0 + (ny - y) ** 2.0
+        d = d ** 0.5
+
+        sin = 0.0
+        cos = 0.0
+
+        if d != 0.0:
+            sin = (ny - y) / d
+            cos = (nx - x) / d
+
+        x1 = x + 15.0 * cos
+        y1 = y + 15.0 * sin
 
         if bee[i][2] == 0:
-            chart_1.create_oval(bee[i][0] - 5, bee[i][1] - 5, bee[i][0] + 5,
-                bee[i][1] + 5, fill='yellow')
+            chart_1.create_oval(x - 5, y - 5, x + 5, y + 5, fill='yellow')
+            chart_1.create_line(x, y, x1, y1, fill='yellow')
         else:
-            chart_1.create_oval(bee[i][0] - 5, bee[i][1] - 5, bee[i][0] + 5,
-                bee[i][1] + 5, fill='blue')
+            chart_1.create_oval(x - 5, y - 5, x + 5, y + 5, fill='blue')
+            chart_1.create_line(x, y, x1, y1, fill='blue')
 
     for i in range(0, flower_count):
         if flower[i][2] > 8:
@@ -258,7 +271,6 @@ while 1:
         if flower[i][2] < 5:
             chart_1.create_oval(flower[i][0] - 5, flower[i][1] - 5,
                 flower[i][0] + 5, flower[i][1] + 5, fill='green')
-            flower[i] = (flower[i][0], flower[i][1], 0)
         else:
             chart_1.create_oval(flower[i][0] - 5, flower[i][1] - 5,
                 flower[i][0] + 5, flower[i][1] + 5, fill='red')

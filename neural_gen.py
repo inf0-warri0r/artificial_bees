@@ -2,7 +2,7 @@
 Author : tharindra galahena (inf0_warri0r)
 Project: artificial bees simulation using neural networks
 Blog   : http://www.inf0warri0r.blogspot.com
-Date   : 29/12/2012
+Date   : 01/01/2013
 License:
 
      Copyright 2012 Tharindra Galahena
@@ -112,11 +112,9 @@ class neural:
 
     def put_weights(self, weights):
         n = 0
-        #print "aaa ", self.num_weights
         for i in range(0, self.num_layers):
             for j in range(0, self.layers[i].num_nodes):
                 for k in range(0, self.layers[i].chr[j].num_inputs):
-                    #print i, " ", j, " ", k, " ", len(weights)
                     self.layers[i].chr[j].weights[k] = weights[n]
                     n = n + 1
 
@@ -127,7 +125,6 @@ class neural:
             if i == 0:
                 sm = 0.0
                 for j in range(0, self.layers[i].num_nodes):
-                    #print "aaaaa ", len(self.layers[i].chr[j].weights)
                     sm = sm + self.layers[i].chr[j].weights[0] * inputs[j]
                     outputs.append(self.convert(sm))
             else:

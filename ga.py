@@ -2,7 +2,7 @@
 Author : tharindra galahena (inf0_warri0r)
 Project: artificial bees simulation using neural networks
 Blog   : http://www.inf0warri0r.blogspot.com
-Date   : 29/12/2012
+Date   : 01/01/2013
 License:
 
      Copyright 2012 Tharindra Galahena
